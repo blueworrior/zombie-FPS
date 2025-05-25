@@ -1,0 +1,4 @@
+repository "zombie fps/zombie fps@18968287149153@cloud"
+  path "/"
+    br "/main"
+    co "/main"
