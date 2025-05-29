@@ -21,6 +21,20 @@ namespace StarterAssets
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
+
+		[Tooltip("Speed of the character while crouching in m/s")]
+		public float CrouchSpeed = 2.0f;
+		[Tooltip("Height of the character while crouching")]
+		public float CrouchHeight = 0.5f;
+		[Tooltip("Time to transition to/from crouch")]
+		public float CrouchTransitionSpeed = 10.0f;
+
+		// Private variables
+		private bool _isCrouching;
+		private float _defaultHeight;
+		private float _defaultCenter;
+
+
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
@@ -105,6 +119,10 @@ namespace StarterAssets
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
+				// Store default controller values
+    _defaultHeight = _controller.height;
+    _defaultCenter = _controller.center.y;
+
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
@@ -114,6 +132,7 @@ namespace StarterAssets
 		{
 			JumpAndGravity();
 			GroundedCheck();
+			Crouch();
 			Move();
 		}
 
@@ -152,73 +171,98 @@ namespace StarterAssets
 		}
 
 		private void Move()
-		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+{
+    // Set target speed based on move speed, sprint speed, crouch speed, and input
+    float targetSpeed = _isCrouching ? CrouchSpeed : (_input.sprint ? SprintSpeed : MoveSpeed);
 
-			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
+    // If no input, set target speed to 0
+    if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
-			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is no input, set the target speed to 0
-			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+    // Get current horizontal speed
+    float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
-			// a reference to the players current horizontal velocity
-			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+    float speedOffset = 0.1f;
+    float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
-			float speedOffset = 0.1f;
-			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
+    // Accelerate or decelerate to target speed
+    if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
+    {
+        _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
+        _speed = Mathf.Round(_speed * 1000f) / 1000f;
+    }
+    else
+    {
+        _speed = targetSpeed;
+    }
 
-			// accelerate or decelerate to target speed
-			if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
-			{
-				// creates curved result rather than a linear one giving a more organic speed change
-				// note T in Lerp is clamped, so we don't need to clamp our speed
-				_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
+    // Normalize input direction
+    Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
-				// round speed to 3 decimal places
-				_speed = Mathf.Round(_speed * 1000f) / 1000f;
-			}
-			else
-			{
-				_speed = targetSpeed;
-			}
+    // Rotate player when moving
+    if (_input.move != Vector2.zero)
+    {
+        inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+    }
 
-			// normalise input direction
-			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+    // Move the player
+    _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+}
 
-			// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is a move input rotate player when the player is moving
-			if (_input.move != Vector2.zero)
-			{
-				// move
-				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
-			}
+		private void Crouch()
+{
+    // Check for crouch input (Left Ctrl)
+    bool crouchInput = false;
+#if ENABLE_INPUT_SYSTEM
+    crouchInput = Keyboard.current.leftCtrlKey.isPressed;
+#else
+    crouchInput = Input.GetKey(KeyCode.LeftControl);
+#endif
 
-			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-		}
+    // Toggle crouch state
+    if (crouchInput && Grounded && !_isCrouching)
+    {
+        _isCrouching = true;
+    }
+    else if (!crouchInput && _isCrouching)
+    {
+        _isCrouching = false;
+    }
+
+    // Calculate target height and center
+    float targetHeight = _isCrouching ? CrouchHeight : _defaultHeight;
+    float targetCenter = _isCrouching ? CrouchHeight / 2f : _defaultCenter;
+
+    // Smoothly interpolate height and center
+    _controller.height = Mathf.Lerp(_controller.height, targetHeight, Time.deltaTime * CrouchTransitionSpeed);
+    _controller.center = new Vector3(_controller.center.x, Mathf.Lerp(_controller.center.y, targetCenter, Time.deltaTime * CrouchTransitionSpeed), _controller.center.z);
+
+    // Prevent crouching while jumping
+    if (_isCrouching && !Grounded)
+    {
+        _isCrouching = false;
+    }
+}
 
 		private void JumpAndGravity()
 		{
 			if (Grounded)
 			{
-				// reset the fall timeout timer
+				// Reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 
-				// stop our velocity dropping infinitely when grounded
+				// Stop velocity dropping infinitely when grounded
 				if (_verticalVelocity < 0.0f)
 				{
 					_verticalVelocity = -2f;
 				}
 
-				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+				// Jump (only if not crouching)
+				if (_input.jump && _jumpTimeoutDelta <= 0.0f && !_isCrouching)
 				{
-					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				}
 
-				// jump timeout
+				// Jump timeout
 				if (_jumpTimeoutDelta >= 0.0f)
 				{
 					_jumpTimeoutDelta -= Time.deltaTime;
@@ -226,20 +270,20 @@ namespace StarterAssets
 			}
 			else
 			{
-				// reset the jump timeout timer
+				// Reset the jump timeout timer
 				_jumpTimeoutDelta = JumpTimeout;
 
-				// fall timeout
+				// Fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
 				{
 					_fallTimeoutDelta -= Time.deltaTime;
 				}
 
-				// if we are not grounded, do not jump
+				// If not grounded, do not jump
 				_input.jump = false;
 			}
 
-			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+			// Apply gravity over time if under terminal velocity
 			if (_verticalVelocity < _terminalVelocity)
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
