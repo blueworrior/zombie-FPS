@@ -5,7 +5,7 @@ public class GunMechScript : MonoBehaviour
     public float damage = 10f;
     public float range = 100f;
     // public float impactForce = 0.2f;
-    public float fireRate = 15f;
+    public float fireRate = 10f;
 
     public Camera fpscam;
     public ParticleSystem muzzleFlash;
