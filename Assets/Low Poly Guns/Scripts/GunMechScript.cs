@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; 
 
 public class GunMechScript : MonoBehaviour
 {
@@ -7,15 +8,35 @@ public class GunMechScript : MonoBehaviour
     // public float impactForce = 0.2f;
     public float fireRate = 10f;
 
+    public int maxAmmo = 10;
+    private int currentAmmo;
+    public float reloadTime = 1f;
+
     public Camera fpscam;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
 
     private float nextTimeToFire = 0f;
-   
-    // Update is called once per frame
-    void Update()
+    private bool isReloading = false;
+
+    public Animator animator;
+  void Start()
+  {
+    currentAmmo = maxAmmo;
+  }
+  // Update is called once per frame
+  void Update()
     {
+        if (isReloading)
+        { 
+            return;
+        }
+        if (currentAmmo <= 0)
+            {
+                StartCoroutine(Reload());
+                return;
+            }
+
         if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
@@ -23,9 +44,27 @@ public class GunMechScript : MonoBehaviour
         }
     }
 
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        Debug.Log("rEALOADING....");
+
+        animator.SetBool("Reloading", true);
+
+        yield return new WaitForSeconds(reloadTime - 0.25f);
+        animator.SetBool("Reloading", false);
+                yield return new WaitForSeconds(0.25f);
+
+
+        currentAmmo = maxAmmo;
+        isReloading = false;
+    }
+
     void Shoot()
     {
         muzzleFlash.Play();
+
+        currentAmmo--;
         RaycastHit hit;
 
         if (Physics.Raycast(fpscam.transform.position, fpscam.transform.forward, out hit, range))
