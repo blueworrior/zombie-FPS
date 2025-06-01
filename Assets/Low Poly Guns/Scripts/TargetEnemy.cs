@@ -3,13 +3,32 @@ using UnityEngine;
 
 public class TargetEnemy : MonoBehaviour
 {
-    public float health = 50f;
+    public float maxHealth = 100f;
+    public float currentHealth;
 
-    public void TakeDamage(float amount)
+    [SerializeField] private HealthBarScript healthBar;
+
+    private void Start()
     {
-        health -= amount;
+        currentHealth = maxHealth;
 
-        if (health <= 0f)
+        // initialzing health bar
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(maxHealth, currentHealth);
+        }
+    }
+
+  public void TakeDamage(float amount)
+    {
+        currentHealth -= amount;
+
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(maxHealth, currentHealth);
+        }
+
+        if (currentHealth <= 0f)
         {
             Die();
         }

@@ -35,6 +35,10 @@ namespace StarterAssets
 		private float _defaultCenter;
 
 
+
+
+
+
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
