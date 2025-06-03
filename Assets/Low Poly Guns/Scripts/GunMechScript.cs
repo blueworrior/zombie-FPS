@@ -71,7 +71,7 @@ public class GunMechScript : MonoBehaviour
         {
             Debug.Log(hit.transform.name);
 
-            TargetEnemy target = hit.transform.GetComponent<TargetEnemy>();
+            TargetEnemy target = hit.transform.GetComponentInParent<TargetEnemy>();
             if (target != null)
             {
                 target.TakeDamage(damage);
