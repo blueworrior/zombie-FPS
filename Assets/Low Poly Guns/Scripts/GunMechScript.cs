@@ -8,7 +8,7 @@ public class GunMechScript : MonoBehaviour
     // public float impactForce = 0.2f;
     public float fireRate = 10f;
 
-    public int maxAmmo = 10;
+    public int maxAmmo = 20;
     private int currentAmmo;
     public float reloadTime = 1f;
 
