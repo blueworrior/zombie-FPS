@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TargetEnemy : MonoBehaviour
@@ -8,18 +7,24 @@ public class TargetEnemy : MonoBehaviour
 
     [SerializeField] private HealthBarScript healthBar;
 
+    // Reference to the animator
+    private Animator animator;
+
     private void Start()
     {
         currentHealth = maxHealth;
 
-        // initialzing health bar
+        // initialize health bar
         if (healthBar != null)
         {
             healthBar.UpdateHealthBar(maxHealth, currentHealth);
         }
+
+        // get animator component
+        animator = GetComponent<Animator>();
     }
 
-  public void TakeDamage(float amount)
+    public void TakeDamage(float amount)
     {
         currentHealth -= amount;
 
@@ -36,6 +41,10 @@ public class TargetEnemy : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject);
+        // Trigger the death animation
+        animator.SetTrigger("die");
+
+        // Destroy the zombie after 2 seconds (or duration of death animation)
+        Destroy(gameObject, 4f);
     }
 }
