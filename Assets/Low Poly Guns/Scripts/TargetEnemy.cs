@@ -8,7 +8,7 @@ public class TargetEnemy : MonoBehaviour
     [SerializeField] private HealthBarScript healthBar;
 
     // Reference to the animator
-    private Animator animator;
+    //private Animator animator;
 
     private void Start()
     {
@@ -21,7 +21,7 @@ public class TargetEnemy : MonoBehaviour
         }
 
         // get animator component
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float amount)
@@ -41,10 +41,11 @@ public class TargetEnemy : MonoBehaviour
 
     void Die()
     {
+        
         // Trigger the death animation
-        animator.SetTrigger("die");
+        //animator.SetTrigger("die");
 
-        // Destroy the zombie after 2 seconds (or duration of death animation)
-        Destroy(gameObject, 4f);
+        // Destroy the zombie after 4 secs
+        Destroy(gameObject);
     }
 }
