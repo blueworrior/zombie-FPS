@@ -17699,6 +17699,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d76a78a721a5d9d499abc8aec19fdc8b, type: 3}
+--- !u!4 &764288591 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 937451010987979973, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
+  m_PrefabInstance: {fileID: 1867821378}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &766202925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 436916, guid: 287711fb95cdc004b814e53a055b4b1e, type: 3}
@@ -18354,6 +18359,8 @@ MonoBehaviour:
   - {fileID: 1066415398}
   - {fileID: 1049423789}
   - {fileID: 1107985727}
+  player: {fileID: 0}
+  chaseDistance: 10
 --- !u!54 &804088652
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -33466,6 +33473,8 @@ MonoBehaviour:
   - {fileID: 1066415398}
   - {fileID: 1049423789}
   - {fileID: 1107985727}
+  player: {fileID: 764288591}
+  chaseDistance: 10
 --- !u!4 &1466334875 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cb593af87684c0a4984ac4c05682bc94, type: 3}

@@ -36,25 +36,24 @@ public class AIMovement : MonoBehaviour
         {
             // Player is close enough, chase him
             agent.destination = player.position;
-
-            // Switch to run animation
-            animator.SetBool("isRunning", true);
-
-            //agent speed
             agent.speed = 2f;
+
+            // Immediately switch to run animation
+            animator.SetBool("isRunning", true);
         }
         else
         {
-            //agent speed
+            // Patrol speed
             agent.speed = 0.5f;
-            // Resume normal patrol
+
+            // Resume patrol
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
                 currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
                 GoToNextWaypoint();
             }
 
-            // Switch to walk animation
+            // Immediately switch to walk animation
             animator.SetBool("isRunning", false);
         }
     }
