@@ -32,6 +32,7 @@ public class AIMovement : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(player.position, transform.position);
 
+        //chasing
         if (distanceToPlayer < chaseDistance)
         {
             // Player is close enough, chase him
@@ -55,6 +56,45 @@ public class AIMovement : MonoBehaviour
 
             // Immediately switch to walk animation
             animator.SetBool("isRunning", false);
+        }
+
+        //biting
+        if (distanceToPlayer < 1f) // 🟡 biting distance, adjust as needed!
+        {
+            // Stop movement
+            agent.isStopped = true;
+
+            // Switch to biting animation
+            animator.SetBool("isBiting", true);
+            animator.SetBool("isRunning", false);
+        }
+        else if (distanceToPlayer < chaseDistance)
+        {
+            // Player is close enough, chase him
+            agent.isStopped = false;
+            agent.destination = player.position;
+            agent.speed = 2f;
+
+            // Run animation
+            animator.SetBool("isRunning", true);
+            animator.SetBool("isBiting", false);
+        }
+        else
+        {
+            // Patrol speed
+            agent.isStopped = false;
+            agent.speed = 0.5f;
+
+            // Resume patrol
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
+                currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
+                GoToNextWaypoint();
+            }
+
+            // Walk animation
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isBiting", false);
         }
     }
 }
