@@ -18793,7 +18793,7 @@ MonoBehaviour:
   - {fileID: 1066415398}
   - {fileID: 1049423789}
   - {fileID: 1107985727}
-  player: {fileID: 0}
+  player: {fileID: 764288591}
   chaseDistance: 10
   canAttack: 1
   damageAmount: 20
