@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class PlayerHealth : MonoBehaviour
     public float maxHealth = 100f;
     public bool isDead = false;
 
+    [SerializeField] private playerHealthBar playerHealthBar;
+
+    public Text healthCouter;
     private void Awake()
     {
         singleton = this;
@@ -16,6 +20,9 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+
+        playerHealthBar.UpdateHealthBar(maxHealth, currentHealth);
+        UpdateHealthCounter();
     }
 
     // Update is called once per frame
@@ -28,12 +35,19 @@ public class PlayerHealth : MonoBehaviour
     {
         if (currentHealth > 0)
         {
-            currentHealth -= damage;
+            if (damage >= currentHealth)
+            {
+                Dead();
 
-        }
-        else
-        {
-            Dead();
+            }
+            else
+            {
+                currentHealth -= damage;
+                playerHealthBar.UpdateHealthBar(maxHealth, currentHealth);
+
+            }
+            UpdateHealthCounter();
+            
         }
     }
 
@@ -42,7 +56,16 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = 0;
         isDead = true;
 
-        Debug.Log("Player is Dead");
         
+        playerHealthBar.UpdateHealthBar(maxHealth, currentHealth);
+        Debug.Log("Player is Dead");
+        UpdateHealthCounter();
+
+    }
+
+
+    void UpdateHealthCounter()
+    {
+        healthCouter.text = currentHealth.ToString();
     }
 }
