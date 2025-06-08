@@ -5,7 +5,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public static PlayerHealth singleton;
     public float currentHealth;
-    public float maxHealth = 6f;
+    public float maxHealth = 100f;
     public bool isDead = false;
 
     [SerializeField] private playerHealthBar playerHealthBar;
@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("Damage Screen")]
     public Color damageColor;
     public Image damageImage;
-    float colorSmoothing = 20f;
+    float colorSmoothing = 2f;
     bool isTakingDamage = false;
     private void Awake()
     {
