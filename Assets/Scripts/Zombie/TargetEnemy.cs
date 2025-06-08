@@ -5,13 +5,16 @@ public class TargetEnemy : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
+    private AIMovement aiMovement; // Reference to AIMovement
+
     [SerializeField] private HealthBarScript healthBar;
 
     // Reference to the animator
-    //private Animator animator;
+    private Animator animator;
 
     private void Start()
     {
+        aiMovement = GetComponent<AIMovement>();
         currentHealth = maxHealth;
 
         // initialize health bar
@@ -21,7 +24,7 @@ public class TargetEnemy : MonoBehaviour
         }
 
         // get animator component
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float amount)
@@ -41,9 +44,13 @@ public class TargetEnemy : MonoBehaviour
 
     void Die()
     {
+         if (aiMovement != null)
+            {
+                aiMovement.DisableEnemy();
+            }
         
         // Trigger the death animation
-        //animator.SetTrigger("die");
+        animator.SetTrigger("die");
 
         // Destroy the zombie after 4 secs
         Destroy(gameObject);

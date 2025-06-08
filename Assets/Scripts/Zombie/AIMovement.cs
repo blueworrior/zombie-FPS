@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,12 @@ public class AIMovement : MonoBehaviour
     public float chaseDistance = 10f;
 
     private Animator animator;
+
+    public bool canAttack = true;
+    public float damageAmount = 20f;
+
+    [SerializeField]
+    float attackTime = 2f;
 
     void Start()
     {
@@ -31,6 +38,14 @@ public class AIMovement : MonoBehaviour
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+
+        //player dies
+        if (PlayerHealth.singleton.isDead)
+        {
+            DisableEnemy();
+            return;
+        }
+
 
         //chasing
         if (distanceToPlayer < chaseDistance)
@@ -58,15 +73,16 @@ public class AIMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
 
-        //biting
-        if (distanceToPlayer < 1f) // 🟡 biting distance, adjust as needed!
+        //biting and attacking the player
+        if (distanceToPlayer < 1f && canAttack) // 🟡 biting distance, adjust as needed!
         {
             // Stop movement
             agent.isStopped = true;
 
-            // Switch to biting animation
+            // Switch to biting animation - ATTACKING THE PLAYER
             animator.SetBool("isBiting", true);
             animator.SetBool("isRunning", false);
+            StartCoroutine(AttackTime());        // added by imama
         }
         else if (distanceToPlayer < chaseDistance)
         {
@@ -96,5 +112,29 @@ public class AIMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
             animator.SetBool("isBiting", false);
         }
+    }
+
+    //added by Imama
+
+public void DisableEnemy()
+{
+    canAttack = false;
+    agent.isStopped = true;
+    animator.SetBool("isBiting", false);
+    animator.SetBool("isRunning", false);
+    // Optional: disable this script if needed
+    // this.enabled = false;
+}
+
+
+    //added by imama
+    IEnumerator AttackTime()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(0.5f);
+        PlayerHealth.singleton.PlayerDamage(damageAmount);
+        yield return new WaitForSeconds(attackTime);
+        canAttack = true;
+
     }
 }
