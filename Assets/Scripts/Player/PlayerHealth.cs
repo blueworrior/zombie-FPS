@@ -17,6 +17,8 @@ public class PlayerHealth : MonoBehaviour
     public Image damageImage;
     float colorSmoothing = 2f;
     bool isTakingDamage = false;
+
+    public GameManagerScript gameManager;
     private void Awake()
     {
         singleton = this;
@@ -53,6 +55,7 @@ public class PlayerHealth : MonoBehaviour
         {
             if (damage >= currentHealth)
             {
+                gameManager.gameOver();
                 isTakingDamage = true;
                 Dead();
 
