@@ -18,22 +18,22 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Yakuzombie_
-    second: {fileID: 2800000, guid: 8a00808343d48c34e9c1920ca0c7c2f6, type: 3}
+    second: {fileID: 2800000, guid: 26f2699d627f42a49a031afd57d095ff, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Yakuzombie_diffuse
-    second: {fileID: 2800000, guid: 90507ca11e64a2b48aaf8da5d38e6209, type: 3}
+    second: {fileID: 2800000, guid: 711d6918d6af57e45857e41c1ee3502e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Yakuzombie_normal
-    second: {fileID: 2800000, guid: 6d11710658785c241ad82cb58b55f734, type: 3}
+    second: {fileID: 2800000, guid: d793755d48e97e34ea7d2cc7182f08b2, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Yakuzombie_specular
-    second: {fileID: 2800000, guid: 685bdedd4968c6e4fa48c3e729b64647, type: 3}
+    second: {fileID: 2800000, guid: 92e2f7401eed71a41b99a9893b551e25, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
