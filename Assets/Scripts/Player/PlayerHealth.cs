@@ -5,12 +5,18 @@ public class PlayerHealth : MonoBehaviour
 {
     public static PlayerHealth singleton;
     public float currentHealth;
-    public float maxHealth = 100f;
+    public float maxHealth = 6f;
     public bool isDead = false;
 
     [SerializeField] private playerHealthBar playerHealthBar;
 
     public Text healthCouter;
+
+    [Header("Damage Screen")]
+    public Color damageColor;
+    public Image damageImage;
+    float colorSmoothing = 20f;
+    bool isTakingDamage = false;
     private void Awake()
     {
         singleton = this;
@@ -26,8 +32,18 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+
+        if (isTakingDamage)
+        {
+            damageImage.color = damageColor;
+        }
+        else
+        {
+            damageImage.color = Color.Lerp(damageImage.color, Color.clear, colorSmoothing * Time.deltaTime);
+        }
+        isTakingDamage = false;
 
     }
 
@@ -37,11 +53,13 @@ public class PlayerHealth : MonoBehaviour
         {
             if (damage >= currentHealth)
             {
+                isTakingDamage = true;
                 Dead();
 
             }
             else
             {
+                isTakingDamage = true;
                 currentHealth -= damage;
                 playerHealthBar.UpdateHealthBar(maxHealth, currentHealth);
 
