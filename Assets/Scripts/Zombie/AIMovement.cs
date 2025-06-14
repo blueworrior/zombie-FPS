@@ -19,21 +19,51 @@ public class AIMovement : MonoBehaviour
     [SerializeField]
     float attackTime = 2f;
 
-    void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+   void Start()
+{
+    agent = GetComponent<NavMeshAgent>();
+    animator = GetComponent<Animator>();
 
-        GoToNextWaypoint();
+    // 🔹 Auto-assign the Player using the tag
+    GameObject playerObject = GameObject.FindWithTag("Player");
+    if (playerObject != null)
+    {
+        player = playerObject.transform;
     }
+    else
+    {
+        Debug.LogWarning("Player not found! Is it tagged 'Player'?");
+    }
+
+    // 🔹 Auto-assign waypoints using the tag
+    GameObject[] waypointObjects = GameObject.FindGameObjectsWithTag("Waypoint");
+    waypoints = new Transform[waypointObjects.Length];
+    for (int i = 0; i < waypointObjects.Length; i++)
+    {
+        waypoints[i] = waypointObjects[i].transform;
+    }
+
+    GoToNextWaypoint();
+}
+
 
     void GoToNextWaypoint()
-    {
-        if (waypoints.Length == 0)
-            return;
+{
+    if (waypoints.Length == 0)
+        return;
 
-        agent.destination = waypoints[currentWaypoint].position;
+    int newWaypoint = Random.Range(0, waypoints.Length);
+
+    // Optional: avoid repeating the same point
+    while (newWaypoint == currentWaypoint && waypoints.Length > 1)
+    {
+        newWaypoint = Random.Range(0, waypoints.Length);
     }
+
+    currentWaypoint = newWaypoint;
+    agent.destination = waypoints[currentWaypoint].position;
+}
+
 
     void Update()
 {
