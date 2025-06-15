@@ -1,3 +1,4 @@
+using SlimUI.ModernMenu;
 using UnityEngine;
 
 public class TargetEnemy : MonoBehaviour
@@ -10,7 +11,7 @@ public class TargetEnemy : MonoBehaviour
     [SerializeField] private HealthBarScript healthBar;
 
     // Reference to the animator
-    private Animator animator;
+    //private Animator animator;
 
     private void Start()
     {
@@ -24,7 +25,7 @@ public class TargetEnemy : MonoBehaviour
         }
 
         // get animator component
-        animator = GetComponent<Animator>();
+       // animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float amount)
@@ -44,15 +45,21 @@ public class TargetEnemy : MonoBehaviour
 
     void Die()
     {
+         Debug.Log("Zombie died");
          if (aiMovement != null)
-            {
-                aiMovement.DisableEnemy();
-            }
+        {
+            aiMovement.DisableEnemy();
+        }
+
+           
         
         // Trigger the death animation
-        animator.SetTrigger("die");
+        //animator.SetTrigger("die");
+
+        // GameManagerScript.instance.killCount++;
+        // GameManagerScript.instance.UpdateKillCounterUI();
 
         // Destroy the zombie after 4 secs
-        Destroy(gameObject);
+        Destroy(gameObject, 3f);
     }
 }

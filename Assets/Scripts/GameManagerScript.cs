@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+//using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -10,6 +12,26 @@ public class GameManagerScript : MonoBehaviour
     public MonoBehaviour gunMechanicScript; // Assign your shooting script here
 
     private bool isPaused = false;
+
+    // public static GameManagerScript instance;
+    // [SerializeField]
+    // TextMeshProUGUI killCounter_TMP;
+
+    // [HideInInspector]
+    // public int killCount;
+
+
+    // void Awake()
+    // {
+    //     if (instance = null)
+    //     {
+    //         instance = this;
+    //     }
+    //     else
+    //     {
+    //         Destroy(gameObject);
+    //     }
+    // }
 
     void Start()
     {
@@ -72,12 +94,12 @@ public class GameManagerScript : MonoBehaviour
     public void quit()
     {
         #if UNITY_EDITOR
-				UnityEditor.EditorApplication.isPlaying = false;
-			#else
-				Application.Quit();
-                Debug.Log("Quit");
-			#endif
-        
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                        Application.Quit();
+                        Debug.Log("Quit");
+        #endif
+
     }
 
     public void PauseGame()
@@ -101,4 +123,11 @@ public class GameManagerScript : MonoBehaviour
 
         Time.timeScale = 1f;
     }
+
+    // public void UpdateKillCounterUI()
+    // {
+    //     Debug.Log("Kill count updated: " + killCount);
+    //     killCounter_TMP.text = killCount.ToString();
+        
+    // }
 }
