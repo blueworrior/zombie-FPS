@@ -60,6 +60,6 @@ public class TargetEnemy : MonoBehaviour
         // GameManagerScript.instance.UpdateKillCounterUI();
 
         // Destroy the zombie after 4 secs
-        Destroy(gameObject, 3f);
+        Destroy(gameObject);
     }
 }
