@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    public GameObject zombiePrefab;        // Drag your zombie prefab here
-    public Transform[] spawnPoints;        // Points where zombies can appear
-    public float spawnInterval = 5f;       // Time between spawns
-    public int maxZombies = 10;            // Limit zombies in the scene
+    [Header("Zombie Prefabs")]
+    public GameObject[] zombiePrefabs; // Assign multiple zombies in Inspector
 
-    private int currentZombies = 0;
+    [Header("Spawning Settings")]
+    public Transform[] spawnPoints; // Points where zombies can spawn
+    public float spawnInterval = 5f; // Time between spawns
 
     void Start()
     {
@@ -16,16 +16,22 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnZombie()
     {
-        if (currentZombies >= maxZombies)
+        if (zombiePrefabs.Length == 0 || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("Assign zombiePrefabs and spawnPoints in the Inspector!");
             return;
+        }
 
-        int randomIndex = Random.Range(0, spawnPoints.Length);
-        Transform spawnPoint = spawnPoints[randomIndex];
+        // Pick a random zombie
+        int zombieIndex = Random.Range(0, zombiePrefabs.Length);
+        GameObject selectedZombie = zombiePrefabs[zombieIndex];
 
-        GameObject zombie = Instantiate(zombiePrefab, spawnPoint.position, spawnPoint.rotation);
-        currentZombies++;
+        // Pick a random spawn point
+        int spawnIndex = Random.Range(0, spawnPoints.Length);
+        Transform spawnPoint = spawnPoints[spawnIndex];
 
-        // Destroy after some time (optional), or manage count manually
-        // Destroy(zombie, 30f);
+        // Instantiate the selected zombie at the chosen spawn point
+        Instantiate(selectedZombie, spawnPoint.position, spawnPoint.rotation);
     }
 }
+    
