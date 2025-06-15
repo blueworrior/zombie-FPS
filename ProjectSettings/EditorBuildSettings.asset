@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dock Thing.unity
     guid: f4fc660ad7cf6eb4eb8cd6d109f7608e
+  - enabled: 0
+    path: Assets/Scenes/MainMenuSAMPLE.unity
+    guid: 80721596d31820240a341a6941b3a10d
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: 80721596d31820240a341a6941b3a10d
+    guid: 829a86ba161cdd840842063447f41aab
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

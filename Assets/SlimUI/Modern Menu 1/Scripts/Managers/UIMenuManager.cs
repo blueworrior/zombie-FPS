@@ -80,7 +80,7 @@ namespace SlimUI.ModernMenu{
         [Tooltip("The GameObject holding the Audio Source component for the SWOOSH SOUND when switching to the Settings Screen")]
         public AudioSource swooshSound;
 
-		void Start(){
+		public void Start(){
 			CameraObject = transform.GetComponent<Animator>();
 
 			playMenu.SetActive(false);
@@ -142,8 +142,15 @@ namespace SlimUI.ModernMenu{
 				StartCoroutine(LoadAsynchronously(scene));
 			}
 		}
+		
 
-		public void  DisablePlayCampaign(){
+		public void LoadDockScene() {
+    LoadScene("Dock Thing");
+}
+
+
+		public void DisablePlayCampaign()
+		{
 			playMenu.SetActive(false);
 		}
 
@@ -273,7 +280,7 @@ namespace SlimUI.ModernMenu{
 				loadingBar.value = progress;
 
 				if (operation.progress >= 0.9f && waitForInput){
-					loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
+					loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " (ENTER)" + " to continue";
 					loadingBar.value = 1;
 
 					if (Input.GetKeyDown(userPromptKey)){
