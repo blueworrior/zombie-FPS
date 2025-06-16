@@ -12,6 +12,8 @@ public class GameManagerScript : MonoBehaviour
     public MonoBehaviour gunMechanicScript; // Assign your shooting script here
 
     private bool isPaused = false;
+    private bool isGameOver = false;
+
 
     // public static GameManagerScript instance;
     // [SerializeField]
@@ -43,7 +45,7 @@ public class GameManagerScript : MonoBehaviour
     void Update()
     {
         // Escape key toggles pause menu (only if Game Over isn't active)
-        if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver)
         {
             if (isPaused)
                 ResumeGame();
@@ -66,6 +68,8 @@ public class GameManagerScript : MonoBehaviour
 
     public void gameOver()
     {
+        isGameOver = true;
+
         gameOverUI.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
