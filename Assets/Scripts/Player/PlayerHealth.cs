@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField] private playerHealthBar playerHealthBar;
 
-    public Text healthCouter;
+    public Text healthCounter;
 
     [Header("Damage Screen")]
     public Color damageColor;
@@ -87,6 +87,6 @@ public class PlayerHealth : MonoBehaviour
 
     void UpdateHealthCounter()
     {
-        healthCouter.text = currentHealth.ToString();
+        healthCounter.text = currentHealth.ToString();
     }
 }
